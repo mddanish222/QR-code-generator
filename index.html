@@ -1,0 +1,72 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QR Code Generator — Text / URL / Location</title>
+  <link rel="stylesheet" href="qrstyle.css">
+</head>
+<body>
+<div class="header">
+  MD-
+  <div class="qr-highlight"><span>QR</span></div>
+  Codes
+</div>
+
+  <div class="card">
+    <h1>QR Code Generator — Text / URL / Location</h1>
+    <small>Choose type, enter data, then generate. Click download to save PNG.</small>
+
+    <label>QR Type</label>
+    <select id="type">
+      <option value="text">Text / URL</option>
+      <option value="location">Location (lat,long or use my location)</option>
+    </select>
+
+    <div id="text-input-block">
+      <label>Text or URL</label>
+      <textarea id="text" rows="3" placeholder="Enter text or a URL (e.g. https://example.com)"></textarea>
+    </div>
+
+    <div id="location-input-block" style="display:none;">
+      <label>Latitude</label>
+      <input id="lat" type="number" step="any" placeholder="e.g. 12.9716" />
+      <label>Longitude</label>
+      <input id="lng" type="number" step="any" placeholder="e.g. 77.5946" />
+      <div class="row">
+        <button id="use-location">Use my location</button>
+        <button id="make-geo-link" class="secondary">Make Navigation QR</button>
+      </div>
+      <small>This will generate a QR that opens Google Maps with directions to your destination.</small>
+    </div>
+
+    <label>Size (px)</label>
+    <input id="size" type="number" value="300" min="100" max="1200" />
+
+    <div class="row" style="margin-top:16px;">
+      <button id="generate">Generate QR</button>
+      <button id="clear" class="secondary">Clear</button>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div id="qr-area">
+        <canvas id="qr-canvas" width="300" height="300" style="background:white;border-radius:8px;"></canvas>
+        <div style="display:flex;gap:8px;">
+          <a id="download-link" href="#" download="qrcode.png">
+            <button id="download" class="secondary">Download PNG</button>
+          </a>
+          <button id="copy-text">Copy payload</button>
+        </div>
+        <small id="payload-preview"></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<script src="script.js"></script>
+
+  
+</body>
+</html>

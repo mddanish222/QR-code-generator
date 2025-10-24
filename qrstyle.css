@@ -1,0 +1,221 @@
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 28px;
+  background: linear-gradient(135deg, #fdfbfb, #ebedee);
+  color: #222;
+  min-height: 100vh;
+  flex-wrap: wrap;
+}
+
+/* Header styling with QR corner brackets */
+.header {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  color: white;
+  background: linear-gradient(135deg, #a4508b, #5f0a87);
+  padding: 14px 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  
+  display: flex; /* changed from inline-flex */
+  align-items: center;
+  justify-content: center; /* centers content horizontally */
+  gap: 8px;
+  width: 100%; /* makes it span full width */
+  max-width: 520px; /* matches card width for alignment */
+  margin: 0 auto; /* centers it */
+}
+
+.qr-highlight {
+  position: relative;
+  padding: 4px 8px;
+  font-weight: 900;
+}
+
+.qr-highlight::before,
+.qr-highlight::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 2px solid white;
+}
+
+.qr-highlight::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.qr-highlight::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.qr-highlight span::before,
+.qr-highlight span::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 2px solid white;
+}
+
+.qr-highlight span::before {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.qr-highlight span::after {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+/* Card */
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 520px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+}
+
+/* Typography */
+h1 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: #5f0a87;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin-top: 12px;
+  color: #333;
+}
+
+input[type="text"], 
+input[type="number"], 
+select, 
+textarea {
+  width: 99%;
+  padding: 10px;
+  border: 1px solid #e3e7ee;
+  border-radius: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, 
+select:focus, 
+textarea:focus {
+  border-color: #a4508b;
+  box-shadow: 0 0 4px rgba(164, 80, 139, 0.4);
+  outline: none;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+button {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0;
+  background: linear-gradient(135deg, #a4508b, #5f0a87);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #8e3b78, #4a076a);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button.secondary {
+  background: #6c757d;
+}
+
+button.secondary:hover {
+  background: #565e64;
+}
+
+/* QR area */
+#qr-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 10px;
+	border: 3px dotted #a4508b;  
+  background: rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.2s ease;
+}
+
+#qr-area:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+small {
+  color: #666;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+    gap: 12px;
+  }
+  .card {
+    padding: 14px;
+    max-width: 100%;
+  }
+  .header {
+    font-size: 20px;
+    padding: 8px 16px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 18px;
+  }
+  button {
+    flex: 1;
+  }
+}
