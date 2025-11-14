@@ -1,139 +1,325 @@
- const typeEl = document.getElementById('type');
-    const textBlock = document.getElementById('text-input-block');
-    const locBlock = document.getElementById('location-input-block');
-    const textEl = document.getElementById('text');
-    const latEl = document.getElementById('lat');
-    const lngEl = document.getElementById('lng');
-    const useLocationBtn = document.getElementById('use-location');
-    const makeGeoBtn = document.getElementById('make-geo-link');
-    const sizeEl = document.getElementById('size');
-    const generateBtn = document.getElementById('generate');
-    const clearBtn = document.getElementById('clear');
-    const canvas = document.getElementById('qr-canvas');
-    const downloadLink = document.getElementById('download-link');
-    const copyBtn = document.getElementById('copy-text');
-    const payloadPreview = document.getElementById('payload-preview');
+// Element refs
+const typeEl = document.getElementById("type");
+const fieldsBox = document.getElementById("dynamic-fields");
+const sizeEl = document.getElementById("size");
+const logoEl = document.getElementById("logo");
+const generateBtn = document.getElementById("generate");
+const clearBtn = document.getElementById("clear");
+const downloadLink = document.getElementById("download-link");
+const whatsappShare = document.getElementById("whatsapp-share");
+const copyBtn = document.getElementById("copy-link");
+const copyStatus = document.getElementById("copy-status");
+const historyBox = document.getElementById("history");
+const clearHistoryBtn = document.getElementById("clear-history");
+const qrStyleEl = document.getElementById("qr-style");
+const canvasContainer = document.getElementById("qr-canvas");
 
-    // Switch between text and location input
-    typeEl.addEventListener('change', () => {
-      if (typeEl.value === 'text') {
-        textBlock.style.display = '';
-        locBlock.style.display = 'none';
-      } else {
-        textBlock.style.display = 'none';
-        locBlock.style.display = '';
-      }
+let qrCode = null;
+let logoImage = null;
+
+// ---------------------- Templates ----------------------
+const templates = {
+  url: [{ id: "url", label: "Website URL", placeholder: "https://example.com" }],
+  text: [{ id: "text", label: "Text", textarea: true }],
+  phone: [
+    { id: "name", label: "Contact Name" },
+    { id: "number", label: "Phone Number" }
+  ],
+  sms: [
+    { id: "smsnum", label: "Phone Number" },
+    { id: "smsmsg", label: "Message", textarea: true }
+  ],
+  email: [
+    { id: "emailto", label: "Recipient Email" },
+    { id: "emailsub", label: "Subject" },
+    { id: "emailbody", label: "Body", textarea: true }
+  ],
+  vcard: [
+    { id: "vname", label: "Full Name" },
+    { id: "vphone", label: "Phone" },
+    { id: "vmail", label: "Email" },
+    { id: "vsite", label: "Website (optional)" }
+  ],
+  wifi: [
+    { id: "ssid", label: "Wi-Fi Name (SSID)" },
+    { id: "wpass", label: "Password" },
+    { id: "wsec", label: "Security (WEP/WPA/None)" }
+  ],
+  whatsapp: [
+    { id: "wphone", label: "Phone Number (with country code)" },
+    { id: "wmsg", label: "Message", textarea: true }
+  ],
+
+  /* NEW templates */
+  upi: [
+    { id: "uname", label: "Name" },
+    { id: "upiid", label: "UPI ID (example@upi)" },
+    { id: "uamt", label: "Amount (optional)", placeholder: "e.g. 250.00" }
+  ],
+
+  maps: [
+    { id: "lat", label: "Latitude (e.g. 28.7041)" },
+    { id: "lng", label: "Longitude (e.g. 77.1025)" }
+  ],
+
+  instagram: [{ id: "insta", label: "Instagram Username (no @)" }],
+
+  facebook: [{ id: "fb", label: "Facebook Page Username or URL" }],
+
+  youtube: [{ id: "yt", label: "YouTube Channel / Video URL" }],
+
+  twitter: [{ id: "tw", label: "Twitter/X Username (no @)" }],
+
+  linkedin: [{ id: "li", label: "LinkedIn Profile or Company URL" }],
+
+  telegram: [{ id: "tg", label: "Telegram Username or Group (no @)" }],
+
+  snapchat: [{ id: "snap", label: "Snapchat Username" }],
+
+  pinterest: [{ id: "pin", label: "Pinterest Username or URL" }],
+
+  pdf: [{ id: "pdf", label: "Direct PDF Link" }]
+};
+
+// ---------------------- Load Input Fields ----------------------
+function loadFields() {
+  const type = typeEl.value;
+  fieldsBox.innerHTML = "";
+  (templates[type] || []).forEach((f) => {
+    const label = document.createElement("label");
+    label.textContent = f.label;
+    fieldsBox.appendChild(label);
+
+    const input = f.textarea ? document.createElement("textarea") : document.createElement("input");
+    input.id = f.id;
+    input.placeholder = f.placeholder || "";
+    fieldsBox.appendChild(input);
+  });
+}
+typeEl.addEventListener("change", loadFields);
+loadFields();
+
+// ---------------------- Payload Builder ----------------------
+function buildPayload() {
+  const t = typeEl.value;
+  const g = (id) => document.getElementById(id)?.value.trim();
+  switch (t) {
+    case "url": return g("url");
+    case "text": return g("text");
+    case "phone": return `tel:${g("number")}`;
+    case "sms": return `sms:${g("smsnum")}?body=${encodeURIComponent(g("smsmsg") || "")}`;
+    case "email": return `mailto:${g("emailto")}?subject=${encodeURIComponent(g("emailsub") || "")}&body=${encodeURIComponent(g("emailbody") || "")}`;
+    case "vcard":
+      return `BEGIN:VCARD\nFN:${g("vname") || ""}\nTEL:${g("vphone") || ""}\nEMAIL:${g("vmail") || ""}\nURL:${g("vsite") || ""}\nEND:VCARD`;
+    case "wifi": return `WIFI:T:${g("wsec") || "WPA"};S:${g("ssid") || ""};P:${g("wpass") || ""};`;
+    case "whatsapp": return `https://wa.me/${g("wphone") || ""}?text=${encodeURIComponent(g("wmsg") || "")}`;
+
+    /* NEW payloads */
+    case "upi": {
+      const pa = g("upiid") || "";
+      const pn = encodeURIComponent(g("uname") || "");
+      const am = g("uamt") || "";
+      // standard UPI deep-link form (apps accept this)
+      return am ? `upi://pay?pa=${pa}&pn=${pn}&am=${am}` : `upi://pay?pa=${pa}&pn=${pn}`;
+    }
+
+    case "maps": {
+      const lat = g("lat") || "";
+      const lng = g("lng") || "";
+      return `https://www.google.com/maps?q=${lat},${lng}`;
+    }
+
+    case "instagram": return `https://instagram.com/${g("insta") || ""}`;
+    case "facebook": return g("fb")?.startsWith("http") ? g("fb") : `https://facebook.com/${g("fb") || ""}`;
+    case "youtube": return g("yt");
+    case "twitter": return `https://twitter.com/${g("tw") || ""}`;
+    case "linkedin": return g("li");
+    case "telegram": return `https://t.me/${g("tg") || ""}`;
+    case "snapchat": return `https://snapchat.com/add/${g("snap") || ""}`;
+    case "pinterest": return g("pin")?.startsWith("http") ? g("pin") : `https://pinterest.com/${g("pin") || ""}`;
+    case "pdf": return g("pdf");
+    default: return "";
+  }
+}
+
+// ---------------------- QR Style Options (10 styles) ----------------------
+function getQRStyle(style) {
+  switch (style) {
+    case "rounded":
+      return { type: "rounded", color: "#1e90ff" };
+    case "dotted":
+      return { type: "dots", color: "#0047ab" };
+    case "line":
+      return { type: "classy", color: "#28a745" };
+case "mixed": return { type: "classy-rounded", gradient: { type: "linear", colorStops: [{ offset: 0, color: "#ff9a9e" }, { offset: 1, color: "#fad0c4" }] } };    
+case "cube":
+      return {
+        type: "square",
+        gradient: { type: "linear", colorStops: [{ offset: 0, color: "#007bff" }, { offset: 1, color: "#6610f2" }] }
+      };
+    case "hex":
+      return { type: "extra-rounded", color: "#ff6600" };
+    case "gradient":
+      return { gradient: { type: "radial", colorStops: [{ offset: 0, color: "#ff0077" }, { offset: 1, color: "#00c6ff" }] } };
+    case "fluid":
+      return { type: "dots", gradient: { type: "linear", colorStops: [{ offset: 0, color: "#00ffa1" }, { offset: 1, color: "#0061ff" }] } };
+    case "eye":
+      return { type: "square", color: "#ff1493", eyeColor: "#000" };
+    case "matrix":
+      return { type: "square", color: "#0f0", gradient: null, eyeColor: "#0f0" }; // green matrix-ish
+    case "square":
+    default:
+      return { type: "square", color: "#000" };
+  }
+}
+
+// ---------------------- History System ----------------------
+function loadHistory() {
+  const items = JSON.parse(localStorage.getItem("qr_history") || "[]");
+  historyBox.innerHTML = "";
+  items.forEach((item, idx) => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+
+    const img = document.createElement("img");
+    img.src = item.img;
+    img.alt = "qr";
+    div.appendChild(img);
+
+    const del = document.createElement("div");
+    del.className = "del-btn";
+    del.innerText = "✕";
+    del.title = "Delete";
+    del.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      deleteHistoryItem(idx);
+    });
+    div.appendChild(del);
+
+    div.addEventListener("click", () => {
+      typeEl.value = item.type;
+      loadFields();
+      (templates[item.type] || []).forEach((f) => {
+        const el = document.getElementById(f.id);
+        if (el) el.value = item.values[f.id] || "";
+      });
+      sizeEl.value = item.size || 300;
+      qrStyleEl.value = item.style || "square";
+      generateQR({ saveHistory: false });
+      // scroll to QR canvas on mobile
+      document.getElementById("qr-canvas")?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
-    // Use current location
-    useLocationBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        alert('Geolocation not supported in this browser.');
-        return;
-      }
-      useLocationBtn.textContent = 'Locating…';
-      navigator.geolocation.getCurrentPosition(pos => {
-        latEl.value = pos.coords.latitude.toFixed(6);
-        lngEl.value = pos.coords.longitude.toFixed(6);
-        useLocationBtn.textContent = 'Use my location';
-      }, err => {
-        alert('Could not get location: ' + err.message);
-        useLocationBtn.textContent = 'Use my location';
-      }, { enableHighAccuracy: true, timeout: 10000 });
+    historyBox.appendChild(div);
+  });
+}
+
+function addToHistory(img, type, size, style) {
+  const values = {};
+  (templates[type] || []).forEach((f) => {
+    values[f.id] = document.getElementById(f.id)?.value.trim() || "";
+  });
+  let list = JSON.parse(localStorage.getItem("qr_history") || "[]");
+  list.unshift({ img, type, size, style, values });
+  list = list.slice(0, 20);
+  localStorage.setItem("qr_history", JSON.stringify(list));
+  loadHistory();
+}
+
+function deleteHistoryItem(index) {
+  let list = JSON.parse(localStorage.getItem("qr_history") || "[]");
+  if (index < 0 || index >= list.length) return;
+  list.splice(index, 1);
+  localStorage.setItem("qr_history", JSON.stringify(list));
+  loadHistory();
+}
+
+clearHistoryBtn.addEventListener("click", () => {
+  if (!confirm("Clear entire QR history?")) return;
+  localStorage.removeItem("qr_history");
+  loadHistory();
+});
+loadHistory();
+
+// ---------------------- Generate QR ----------------------
+async function generateQR(options = { saveHistory: true }) {
+  const data = buildPayload();
+  if (!data) return alert("Enter valid data!");
+
+  const size = parseInt(sizeEl.value) || 300;
+  const style = getQRStyle(qrStyleEl.value);
+
+  const qrOptions = {
+    width: size,
+    height: size,
+    data: data,
+    image: logoImage ? logoImage.src : undefined,
+    dotsOptions: {
+      type: style.type || "square",
+      color: style.color || "#000",
+      gradient: style.gradient || undefined
+    },
+    backgroundOptions: { color: "#fff" },
+    cornersSquareOptions: { color: style.eyeColor || style.color || "#000" }
+  };
+
+  // clear old
+  canvasContainer.innerHTML = "";
+  qrCode = new QRCodeStyling(qrOptions);
+  qrCode.append(canvasContainer);
+
+  // Convert to dataURL for download/share/history
+  try {
+    const blob = await qrCode.getRawData("png");
+    const dataUrl = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
     });
 
-    // Make Navigation QR
-    makeGeoBtn.addEventListener('click', () => {
-      const lat = latEl.value.trim();
-      const lng = lngEl.value.trim();
-      if (!lat || !lng) {
-        alert('Enter both latitude and longitude (or use my location).');
-        return;
-      }
-      const mapsNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-      textEl.value = mapsNavUrl;
-      typeEl.value = 'text';
-      textBlock.style.display = '';
-      locBlock.style.display = 'none';
-      payloadPreview.textContent = 'Created payload: ' + mapsNavUrl;
-    });
+    downloadLink.href = dataUrl;
+    whatsappShare.href = `https://wa.me/?text=Scan%20this%20QR:%20${encodeURIComponent(dataUrl)}`;
 
-    // Generate QR
-    generateBtn.addEventListener('click', async () => {
-      let payload = '';
-      const size = parseInt(sizeEl.value) || 300;
+    if (options.saveHistory) addToHistory(dataUrl, typeEl.value, size, qrStyleEl.value);
+  } catch (err) {
+    console.error(err);
+    alert("Could not generate preview. Try different options.");
+  }
+}
 
-      if (typeEl.value === 'text') {
-        payload = textEl.value.trim();
-        if (!payload) {
-          alert('Enter text or URL to encode.');
-          return;
-        }
-      } else {
-        const lat = latEl.value.trim();
-        const lng = lngEl.value.trim();
-        if (!lat || !lng) {
-          alert('Enter latitude and longitude or use your location.');
-          return;
-        }
-        // Direct navigation link
-        payload = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-      }
+// ---------------------- Logo Upload ----------------------
+logoEl.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    logoImage = new Image();
+    logoImage.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
-      payloadPreview.textContent = 'Payload: ' + payload;
+// ---------------------- Buttons ----------------------
+copyBtn.addEventListener("click", () => {
+  const imgURL = downloadLink.href;
+  if (!imgURL) return alert("Generate a QR first.");
+  navigator.clipboard.writeText(imgURL).then(() => {
+    copyStatus.style.display = "inline";
+    setTimeout(() => (copyStatus.style.display = "none"), 1500);
+  }).catch(() => alert("Copy failed. Try manually."));
+});
 
-      try {
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.width = size;
-        canvas.height = size;
+generateBtn.addEventListener("click", () => generateQR({ saveHistory: true }));
 
-        await QRCode.toCanvas(canvas, payload, {
-          width: size,
-          margin: 1
-        });
+clearBtn.addEventListener("click", () => {
+  if (!confirm("Clear all form fields?")) return;
 
-        downloadLink.href = canvas.toDataURL('image/png');
-        downloadLink.download = 'qrcode.png';
-      } catch (err) {
-        console.error(err);
-        alert('Failed to create QR: ' + err);
-      }
-    });
+  document.querySelectorAll("input, textarea").forEach((i) => (i.value = ""));
+  canvasContainer.innerHTML = "";
 
-    // Clear fields
-    clearBtn.addEventListener('click', () => {
-      textEl.value = '';
-      latEl.value = '';
-      lngEl.value = '';
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      payloadPreview.textContent = '';
-    });
+  // FIX: clear the logo
+  logoImage = null;
+  logoEl.value = "";
+});
 
-    // Copy payload
-    copyBtn.addEventListener('click', async () => {
-      let payload = payloadPreview.textContent.replace(/^Payload:\s*/, '');
-      if (!payload) {
-        if (typeEl.value === 'text') payload = textEl.value.trim();
-        else payload = `https://www.google.com/maps/dir/?api=1&destination=${latEl.value.trim()},${lngEl.value.trim()}`;
-      }
-      if (!payload) {
-        alert('No payload to copy');
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(payload);
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = 'Copy payload', 1200);
-      } catch (e) {
-        alert('Clipboard failed: ' + e);
-      }
-    });
 
-    // Ctrl+Enter shortcut
-    textEl.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        generateBtn.click();
-      }
-    });
