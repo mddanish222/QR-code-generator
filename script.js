@@ -152,13 +152,26 @@ function getQRStyle(style) {
     case "line":
       return { type: "classy", color: "#28a745" };
 case "mixed": return { type: "classy-rounded", gradient: { type: "linear", colorStops: [{ offset: 0, color: "#ff9a9e" }, { offset: 1, color: "#fad0c4" }] } };    
-case "cube":
+    case "cube":
       return {
         type: "square",
-        gradient: { type: "linear", colorStops: [{ offset: 0, color: "#007bff" }, { offset: 1, color: "#6610f2" }] }
+        gradient: {
+          type: "linear",
+          colorStops: [
+            { offset: 0, color: "#3a7bd5" }, // bright blue
+            { offset: 1, color: "#3a6073" }  // deep purple/steel
+          ]}};
+case "hex":
+      return {
+        type: "extra-rounded",
+        gradient: {
+          type: "linear",
+          colorStops: [
+            { offset: 0, color: "#ffb347" }, // soft orange
+            { offset: 1, color: "#ffcc33" }  // golden yellow
+          ]
+        }
       };
-    case "hex":
-      return { type: "extra-rounded", color: "#ff6600" };
     case "gradient":
       return { gradient: { type: "radial", colorStops: [{ offset: 0, color: "#ff0077" }, { offset: 1, color: "#00c6ff" }] } };
     case "fluid":
@@ -167,6 +180,17 @@ case "cube":
       return { type: "square", color: "#ff1493", eyeColor: "#000" };
     case "matrix":
       return { type: "square", color: "#0f0", gradient: null, eyeColor: "#0f0" }; // green matrix-ish
+case "pixelated":
+      return {
+        type: "square",
+        gradient: {
+          type: "linear",
+          colorStops: [
+            { offset: 0, color: "#ff00ff" }, // neon magenta
+            { offset: 1, color: "#00ffff" }  // neon cyan
+          ]
+        }
+      };
     case "square":
     default:
       return { type: "square", color: "#000" };
@@ -187,9 +211,7 @@ function loadHistory() {
     div.appendChild(img);
 
     const del = document.createElement("div");
-    del.className = "del-btn";
-    del.innerText = "✕";
-    del.title = "Delete";
+            del.title = "Delete";
     del.addEventListener("click", (ev) => {
       ev.stopPropagation();
       deleteHistoryItem(idx);
@@ -246,12 +268,14 @@ async function generateQR(options = { saveHistory: true }) {
   const data = buildPayload();
   if (!data) return alert("Enter valid data!");
 
-  const size = parseInt(sizeEl.value) || 300;
+  const outputSize = parseInt(sizeEl.value) || 300;   // user selected size
+  const previewSize = 320;                            // fixed preview size
   const style = getQRStyle(qrStyleEl.value);
 
-  const qrOptions = {
-    width: size,
-    height: size,
+  // ------------------ 1. PREVIEW QR (fixed 300px) ------------------
+  const previewOptions = {
+    width: previewSize,
+    height: previewSize,
     data: data,
     image: logoImage ? logoImage.src : undefined,
     dotsOptions: {
@@ -260,17 +284,44 @@ async function generateQR(options = { saveHistory: true }) {
       gradient: style.gradient || undefined
     },
     backgroundOptions: { color: "#fff" },
-    cornersSquareOptions: { color: style.eyeColor || style.color || "#000" }
+    cornersSquareOptions: { color: style.eyeColor || style.color || "#000" },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 3,
+      imageSize: 0.5
+    }
   };
 
-  // clear old
+  // Show preview in dotted box
   canvasContainer.innerHTML = "";
-  qrCode = new QRCodeStyling(qrOptions);
-  qrCode.append(canvasContainer);
+  const previewQR = new QRCodeStyling(previewOptions);
+  previewQR.append(canvasContainer);
 
-  // Convert to dataURL for download/share/history
+  // ------------------ 2. OUTPUT QR (for download/share) ------------------
+  const outputOptions = {
+    width: outputSize,
+    height: outputSize,
+    data: data,
+    image: logoImage ? logoImage.src : undefined,
+    dotsOptions: {
+      type: style.type || "square",
+      color: style.color || "#000",
+      gradient: style.gradient || undefined
+    },
+    backgroundOptions: { color: "#fff" },
+    cornersSquareOptions: { color: style.eyeColor || style.color || "#000" },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 3,
+      imageSize: 0.5
+    }
+  };
+
+  const outputQR = new QRCodeStyling(outputOptions);
+
+  // Convert to PNG for download/share/history
   try {
-    const blob = await qrCode.getRawData("png");
+    const blob = await outputQR.getRawData("png");
     const dataUrl = await new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
@@ -280,11 +331,12 @@ async function generateQR(options = { saveHistory: true }) {
     downloadLink.href = dataUrl;
     whatsappShare.href = `https://wa.me/?text=Scan%20this%20QR:%20${encodeURIComponent(dataUrl)}`;
 
-    if (options.saveHistory) addToHistory(dataUrl, typeEl.value, size, qrStyleEl.value);
-  } catch (err) {
-    console.error(err);
-    alert("Could not generate preview. Try different options.");
-  }
+    if (options.saveHistory)
+      addToHistory(dataUrl, typeEl.value, outputSize, qrStyleEl.value);
+
+  }  catch (err) {
+  console.warn("Preview failed:", err);
+}
 }
 
 // ---------------------- Logo Upload ----------------------
