@@ -288,7 +288,7 @@ async function generateQR(options = { saveHistory: true }) {
     cornersSquareOptions: { color: style.eyeColor || style.color || "#000" },
     imageOptions: {
       crossOrigin: "anonymous",
-      margin: 3,
+      margin: 6,
       imageSize: 0.5
     }
   };
@@ -374,5 +374,6 @@ clearBtn.addEventListener("click", () => {
   logoImage = null;
   logoEl.value = "";
 });
+
 
 
