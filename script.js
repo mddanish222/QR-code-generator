@@ -161,7 +161,7 @@ case "mixed": return { type: "classy-rounded", gradient: { type: "linear", color
             { offset: 0, color: "#3a7bd5" }, // bright blue
             { offset: 1, color: "#3a6073" }  // deep purple/steel
           ]}};
-case "hex":
+case "hexhoney":
       return {
         type: "extra-rounded",
         gradient: {
@@ -172,6 +172,7 @@ case "hex":
           ]
         }
       };
+case "hex": return { type: "extra-rounded", color: "#ff6600" };
     case "gradient":
       return { gradient: { type: "radial", colorStops: [{ offset: 0, color: "#ff0077" }, { offset: 1, color: "#00c6ff" }] } };
     case "fluid":
