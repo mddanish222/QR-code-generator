@@ -577,8 +577,15 @@ textarea.styled-input { min-height: 80px; resize: vertical; }
 
 /* Scan placeholder */
 #scan-placeholder-msg {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 10px; color: var(--text-muted); font-size: 13px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 /* Camera buttons */
