@@ -1,49 +1,63 @@
-// MD-QR Studio — Service Worker v3
-const CACHE = "mdqr-v3";
+const CACHE = "mdqr-v4";
+const BASE = "/QR-code-generator";
+
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/qrstyle.css",
-  "/script.js",
-  "/manifest.json",
-  "/icon.png",
-  "https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js",
-  "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js",
-  "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
+  BASE + "/",
+  BASE + "/index.html",
+  BASE + "/qrstyle.css",
+  BASE + "/script.js",
+  BASE + "/manifest.json",
+  BASE + "/icon.png"
 ];
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(
+self.addEventListener("install", (event) => {
+  event.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(ASSETS))
+      .then((cache) => cache.addAll(ASSETS))
       .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(
-        keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE)
+          .map((key) => caches.delete(key))
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
-self.addEventListener("fetch", (e) => {
-  if (e.request.mode === "navigate") {
-    e.respondWith(fetch(e.request).catch(() => caches.match("/index.html")));
-    return;
-  }
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(e.request).then((res) => {
-        if (!res || res.status !== 200 || res.type === "opaque") return res;
-        const clone = res.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, clone));
-        return res;
-      }).catch(() => caches.match(e.request));
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
+
+      return fetch(event.request)
+        .then((networkResponse) => {
+          if (
+            !networkResponse ||
+            networkResponse.status !== 200 ||
+            networkResponse.type === "opaque"
+          ) {
+            return networkResponse;
+          }
+
+          const responseClone = networkResponse.clone();
+
+          caches.open(CACHE).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(BASE + "/index.html");
+        });
     })
   );
 });
