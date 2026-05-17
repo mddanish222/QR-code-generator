@@ -1,5 +1,5 @@
-// MD-QR Studio — Service Worker v2
-const CACHE = "mdqr-v2";
+// MD-QR Studio — Service Worker v3
+const CACHE = "mdqr-v3";
 const ASSETS = [
   "/",
   "/index.html",
