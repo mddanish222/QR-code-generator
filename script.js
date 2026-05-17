@@ -433,3 +433,11 @@ clearBtn.addEventListener("click", () => {
   document.getElementById("logo-label").textContent = "Click to upload logo";
   currentPayload = "";
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/QR-code-generator/sw.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch((err) => console.error("SW Error:", err));
+  });
+}
