@@ -3,102 +3,862 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MD-QR Codes — Multi Template Generator</title>
+  <title>MD-QR Studio</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d0d1a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MD-QR" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="icon" href="icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="qrstyle.css">
 </head>
 <body>
 
-<div class="header">
-  MD-
-  <div class="qr-highlight"><span>QR</span></div>
-  Codes
-</div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
 
-<div class="card">
-  <h1>QR Code Generator</h1>
-  <small>Select template → enter details → generate QR → download</small>
-
-  <!-- TEMPLATE SELECTOR -->
-  <label>QR Template</label>
-  <select id="type">
-    <option value="url">URL / Website</option>
-    <option value="text">Plain Text</option>
-    <option value="phone">Phone Contact (Name + Number)</option>
-    <option value="sms">SMS (Number + Message)</option>
-    <option value="email">Email (To + Subject + Body)</option>
-    <option value="vcard">vCard Contact</option>
-    <option value="wifi">Wi-Fi Login</option>
-    <option value="whatsapp">WhatsApp Message</option>
-    <option value="upi">UPI Payment</option>
-    <option value="maps">Google Maps Location</option>
-    <option value="instagram">Instagram Profile</option>
-    <option value="facebook">Facebook Page</option>
-    <option value="youtube">YouTube Channel / Video</option>
-    <option value="twitter">Twitter / X Profile</option>
-    <option value="linkedin">LinkedIn Profile / Company</option>
-    <option value="telegram">Telegram Group / Chat</option>
-    <option value="snapchat">Snapchat Add</option>
-    <option value="pinterest">Pinterest Profile</option>
-    <option value="pdf">PDF Download Link</option>
-  </select>
-
-  <!-- DYNAMIC FORM AREA -->
-  <div id="dynamic-fields"></div>
-
-  <label>QR Size (px)</label>
-  <input id="size" type="number" value="800" min="100" max="1000">
-
-  <label>Upload Center Logo (optional)</label>
-  <input type="file" id="logo" accept="image/*">
-
-  <div class="row" style="margin-top:16px;">
-    <button id="generate">Generate QR</button>
-    <button id="clear" class="secondary">Clear</button>
-
-    <!-- QR STYLE SELECT (10 styles) -->
-    <select id="qr-style" style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid #ccc; font-size:14px;">
-      <option value="square">🔲 Square</option>
-      <option value="rounded">🟦 Rounded</option>
-      <option value="dotted">⚫ Dotted</option>
-      <option value="line">➖ Line</option>
-      <option value="cube">🧊 Cube</option>
-      <option value="hex">⬢ Hex</option>
-      <option value="gradient">🌈 Gradient</option>
-      <option value="fluid">💧 Fluid</option>
-<option value="hexhoney">⬢ Hexagonal / Honeycomb</option> 
-<option value="pixelated">🎨 Pixelated Gradient</option>
-      <option value="eye">👁 Eye</option>
-      <option value="matrix">🟩 Matrix</option>
-<option value="mixed">🌀 Mixed Style (Custom)</option>
-    </select>
-  </div><br>
-
-  <div id="qr-area">
-
-    <div id="qr-canvas"></div>
-
-    <div class="qr-actions">
-      <a id="download-link" href="#" download="qrcode.png" class="btn secondary">Download</a>
-      <a id="whatsapp-share" href="#" target="_blank" class="btn secondary">Share on WhatsApp</a>
-      <button id="copy-link" class="btn secondary">Copy QR Image Link</button>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-mark">
+      <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+        <rect x="2" y="2" width="12" height="12" rx="2.5" fill="url(#hg)"/>
+        <rect x="18" y="2" width="12" height="12" rx="2.5" fill="url(#hg)"/>
+        <rect x="2" y="18" width="12" height="12" rx="2.5" fill="url(#hg)"/>
+        <rect x="20" y="20" width="4" height="4" rx="1" fill="url(#hg)"/>
+        <rect x="26" y="20" width="4" height="4" rx="1" fill="url(#hg)"/>
+        <rect x="20" y="26" width="4" height="4" rx="1" fill="url(#hg)"/>
+        <rect x="26" y="26" width="4" height="4" rx="1" fill="url(#hg)"/>
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00f5c4"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
-    <span id="copy-status" style="font-size:12px;color:green;display:none;">Copied!</span>
-  </div>
-
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:22px;">
-    <h3 style="margin:0; color:#5f0a87; font-weight:700;">History (Last 20)</h3>
-    <div>
-      <button id="clear-history" class="secondary" style="padding:8px 10px;">Clear History</button>
+    <div class="header-text">
+      <span class="header-title">MD-QR <em>Studio</em></span>
+      <span class="header-sub">Advanced QR Code Generator</span>
+    </div>
+    <div class="pwa-badge" id="install-btn" style="display:none;">
+      <span>📲 Install App</span>
     </div>
   </div>
+</header>
 
-  <div id="history"></div>
-
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" data-tab="generator">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="17" width="3" height="3" rx=".5"/>
+        <rect x="18" y="17" width="3" height="3" rx=".5"/><rect x="14" y="14" width="3" height="3" rx=".5"/>
+        <rect x="18" y="14" width="3" height="3" rx=".5"/>
+      </svg>
+      Generator
+    </button>
+    <button class="tab-btn" data-tab="scanner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+        <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+      </svg>
+      Scanner
+    </button>
+  </div>
 </div>
 
-<!-- QR library (required) -->
+<!-- ═══════════════════════════════════════
+     GENERATOR TAB
+═══════════════════════════════════════ -->
+<div id="tab-generator" class="tab-content active">
+
+  <main class="main-grid">
+
+    <!-- LEFT PANEL -->
+    <section class="card generator-card">
+
+      <!-- 01 Template -->
+      <div class="panel-section">
+        <div class="section-label"><span class="num">01</span> Template</div>
+        <select id="type" style="display:none;">
+          <option value="url">🌐 URL / Website</option>
+          <option value="text">📝 Plain Text</option>
+          <option value="voting">🗳️ Voting (ID | Name | Code)</option>
+          <option value="phone">📞 Phone Contact</option>
+          <option value="sms">💬 SMS Message</option>
+          <option value="email">📧 Email</option>
+          <option value="vcard">👤 vCard Contact</option>
+          <option value="wifi">📶 Wi-Fi Login</option>
+          <option value="whatsapp">🟢 WhatsApp Message</option>
+          <option value="upi">💳 UPI Payment</option>
+          <option value="maps">📍 Google Maps</option>
+          <option value="instagram">📸 Instagram</option>
+          <option value="facebook">👍 Facebook</option>
+          <option value="youtube">▶️ YouTube</option>
+          <option value="twitter">🐦 Twitter / X</option>
+          <option value="linkedin">💼 LinkedIn</option>
+          <option value="telegram">✈️ Telegram</option>
+          <option value="snapchat">👻 Snapchat</option>
+          <option value="pinterest">📌 Pinterest</option>
+          <option value="pdf">📄 PDF Link</option>
+        </select>
+        <div class="cdd" id="cdd-type" data-for="type">
+          <div class="cdd-trigger">
+            <span class="cdd-label">🌐 URL / Website</span>
+            <svg class="cdd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="cdd-menu">
+            <div class="cdd-search-wrap"><input class="cdd-search" type="text" placeholder="Search templates…" /></div>
+            <div class="cdd-list">
+              <div class="cdd-item active" data-value="url">🌐 URL / Website</div>
+              <div class="cdd-item" data-value="text">📝 Plain Text</div>
+              <div class="cdd-item" data-value="voting">🗳️ Voting (ID | Name | Code)</div>
+              <div class="cdd-item" data-value="phone">📞 Phone Contact</div>
+              <div class="cdd-item" data-value="sms">💬 SMS Message</div>
+              <div class="cdd-item" data-value="email">📧 Email</div>
+              <div class="cdd-item" data-value="vcard">👤 vCard Contact</div>
+              <div class="cdd-item" data-value="wifi">📶 Wi-Fi Login</div>
+              <div class="cdd-item" data-value="whatsapp">🟢 WhatsApp Message</div>
+              <div class="cdd-item" data-value="upi">💳 UPI Payment</div>
+              <div class="cdd-item" data-value="maps">📍 Google Maps</div>
+              <div class="cdd-item" data-value="instagram">📸 Instagram</div>
+              <div class="cdd-item" data-value="facebook">👍 Facebook</div>
+              <div class="cdd-item" data-value="youtube">▶️ YouTube</div>
+              <div class="cdd-item" data-value="twitter">🐦 Twitter / X</div>
+              <div class="cdd-item" data-value="linkedin">💼 LinkedIn</div>
+              <div class="cdd-item" data-value="telegram">✈️ Telegram</div>
+              <div class="cdd-item" data-value="snapchat">👻 Snapchat</div>
+              <div class="cdd-item" data-value="pinterest">📌 Pinterest</div>
+              <div class="cdd-item" data-value="pdf">📄 PDF Link</div>
+            </div>
+          </div>
+        </div>
+        <div id="dynamic-fields"></div>
+      </div>
+
+      <!-- 02 Style -->
+      <div class="panel-section">
+        <div class="section-label"><span class="num">02</span> Style</div>
+        <div class="field-group">
+          <label>QR Size</label>
+          <div class="size-presets">
+            <button class="size-btn" data-px="512">Small<span>512px</span></button>
+            <button class="size-btn active" data-px="800">Medium<span>800px</span></button>
+            <button class="size-btn" data-px="1200">Large<span>1200px</span></button>
+            <button class="size-btn" data-px="2000">Print<span>2000px</span></button>
+          </div>
+          <div class="size-manual">
+            <input id="size" type="number" value="800" min="100" max="5000" class="styled-input" placeholder="or type a custom px value…">
+            <span class="size-unit">px</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Dot Style</label>
+          <select id="qr-style" style="display:none;">
+            <option value="square">🔲 Square</option>
+            <option value="rounded">🟦 Rounded</option>
+            <option value="dotted">⚫ Dotted</option>
+            <option value="line">➖ Classy</option>
+            <option value="cube">🧊 Cube</option>
+            <option value="hex">⬢ Hex</option>
+            <option value="gradient">🌈 Radial</option>
+            <option value="fluid">💧 Fluid</option>
+            <option value="hexhoney">🍯 Honeycomb</option>
+            <option value="pixelated">🎨 Neon</option>
+            <option value="eye">👁 Eye</option>
+            <option value="matrix">🟩 Matrix</option>
+            <option value="mixed">🌀 Mixed</option>
+          </select>
+          <div class="cdd" id="cdd-qr-style" data-for="qr-style">
+            <div class="cdd-trigger">
+              <span class="cdd-label">🔲 Square</span>
+              <svg class="cdd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="cdd-menu">
+              <div class="cdd-list">
+                <div class="cdd-item active" data-value="square">🔲 Square</div>
+                <div class="cdd-item" data-value="rounded">🟦 Rounded</div>
+                <div class="cdd-item" data-value="dotted">⚫ Dotted</div>
+                <div class="cdd-item" data-value="line">➖ Classy</div>
+                <div class="cdd-item" data-value="cube">🧊 Cube</div>
+                <div class="cdd-item" data-value="hex">⬢ Hex</div>
+                <div class="cdd-item" data-value="gradient">🌈 Radial</div>
+                <div class="cdd-item" data-value="fluid">💧 Fluid</div>
+                <div class="cdd-item" data-value="hexhoney">🍯 Honeycomb</div>
+                <div class="cdd-item" data-value="pixelated">🎨 Neon</div>
+                <div class="cdd-item" data-value="eye">👁 Eye</div>
+                <div class="cdd-item" data-value="matrix">🟩 Matrix</div>
+                <div class="cdd-item" data-value="mixed">🌀 Mixed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Center Logo <span class="tag">optional</span></label>
+          <div class="file-zone" id="logo-zone">
+            <input type="file" id="logo" accept="image/*" hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span id="logo-label">Click to upload logo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Frame -->
+      <div class="panel-section">
+        <div class="section-label"><span class="num">03</span> Frame</div>
+        <div class="two-col">
+          <div class="field-group">
+            <label>Frame Style</label>
+            <select id="frame-style" style="display:none;">
+              <option value="none">None</option>
+              <option value="simple">Simple Border</option>
+              <option value="rounded">Rounded Card</option>
+              <option value="shadow">Shadow Box</option>
+              <option value="ribbon">Ribbon</option>
+              <option value="badge">Badge / Stamp</option>
+              <option value="ticket">Ticket Dashed</option>
+            </select>
+            <div class="cdd" id="cdd-frame-style" data-for="frame-style">
+              <div class="cdd-trigger">
+                <span class="cdd-label">None</span>
+                <svg class="cdd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="cdd-menu">
+                <div class="cdd-list">
+                  <div class="cdd-item active" data-value="none">None</div>
+                  <div class="cdd-item" data-value="simple">Simple Border</div>
+                  <div class="cdd-item" data-value="rounded">Rounded Card</div>
+                  <div class="cdd-item" data-value="shadow">Shadow Box</div>
+                  <div class="cdd-item" data-value="ribbon">Ribbon</div>
+                  <div class="cdd-item" data-value="badge">Badge / Stamp</div>
+                  <div class="cdd-item" data-value="ticket">Ticket Dashed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Label Position</label>
+            <select id="label-pos" style="display:none;">
+              <option value="bottom">Bottom</option>
+              <option value="top">Top</option>
+              <option value="both">Top + Bottom</option>
+            </select>
+            <div class="cdd" id="cdd-label-pos" data-for="label-pos">
+              <div class="cdd-trigger">
+                <span class="cdd-label">Bottom</span>
+                <svg class="cdd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="cdd-menu">
+                <div class="cdd-list">
+                  <div class="cdd-item active" data-value="bottom">Bottom</div>
+                  <div class="cdd-item" data-value="top">Top</div>
+                  <div class="cdd-item" data-value="both">Top + Bottom</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field-group">
+            <label>Top Label</label>
+            <input id="label-top" type="text" placeholder="e.g. Scan Me!" class="styled-input">
+          </div>
+          <div class="field-group">
+            <label>Bottom Label</label>
+            <input id="label-bottom" type="text" placeholder="e.g. mdqr.app" class="styled-input">
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field-group">
+            <label>Frame Color</label>
+            <div class="color-row">
+              <input id="frame-color" type="color" value="#7c3aed" class="color-picker">
+              <span id="frame-color-val">#7c3aed</span>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Font Size — <span id="font-size-val">22</span>px</label>
+            <input id="font-size" type="range" min="12" max="48" value="22" class="range-slider">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="generate" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Generate QR
+        </button>
+        <button id="clear" class="btn-ghost">✕ Clear</button>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: Preview -->
+    <section class="card preview-card">
+      <div class="section-label"><span class="num">↗</span> Preview</div>
+      <div id="qr-area">
+        <div id="qr-placeholder">
+          <div class="placeholder-icon">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <rect x="4" y="4" width="24" height="24" rx="3" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="10" y="10" width="12" height="12" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="36" y="4" width="24" height="24" rx="3" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="42" y="10" width="12" height="12" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="4" y="36" width="24" height="24" rx="3" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="10" y="42" width="12" height="12" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="36" y="36" width="10" height="10" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="50" y="36" width="10" height="10" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="36" y="50" width="10" height="10" rx="1.5" fill="currentColor" opacity=".4"/>
+              <rect x="50" y="50" width="10" height="10" rx="1.5" fill="currentColor" opacity=".4"/>
+            </svg>
+          </div>
+          <p>Fill the form &amp; hit <strong>Generate QR</strong></p>
+        </div>
+        <div id="qr-canvas"></div>
+        <canvas id="framed-canvas" style="display:none;"></canvas>
+      </div>
+      <div class="qr-actions" id="qr-actions" style="display:none;">
+        <a id="download-link" href="#" download="md-qr.png" class="action-btn primary-action">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PNG
+        </a>
+        <a id="whatsapp-share" href="#" target="_blank" class="action-btn wa-action">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.122 1.524 5.86L.057 23.272a.75.75 0 0 0 .917.932l5.56-1.458A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.698-.504-5.243-1.383l-.374-.216-3.865 1.013 1.034-3.764-.235-.386A9.947 9.947 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Share WhatsApp
+        </a>
+        <button id="copy-link" class="action-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Data
+        </button>
+      </div>
+      <span id="copy-status">✓ Copied to clipboard</span>
+    </section>
+
+  </main>
+
+  <!-- HISTORY -->
+  <section class="card history-card">
+    <div class="history-header">
+      <div class="history-title-group">
+        <div class="section-label" style="margin:0"><span class="num">⏱</span> History</div>
+        <span id="history-count" class="pill">0 QR codes</span>
+      </div>
+      <button id="clear-history" class="btn-ghost small">🗑 Clear All</button>
+    </div>
+    <div id="history" class="history-grid"></div>
+    <div id="view-more-wrap" style="display:none; text-align:center; margin-top:20px;">
+      <button id="view-more" class="btn-ghost">↓ Show More</button>
+    </div>
+  </section>
+
+</div><!-- /tab-generator -->
+
+<!-- ═══════════════════════════════════════
+     SCANNER TAB
+═══════════════════════════════════════ -->
+<div id="tab-scanner" class="tab-content">
+  <div class="scanner-wrap">
+
+    <!-- Mode toggle -->
+    <div class="scan-mode-toggle">
+      <button class="scan-mode-btn active" id="btn-camera">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Live Camera
+      </button>
+      <button class="scan-mode-btn" id="btn-upload">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Upload Image
+      </button>
+    </div>
+
+    <div class="scan-grid">
+
+      <!-- LEFT: Camera / Upload area -->
+      <div class="card scan-area-card">
+
+        <!-- Camera view -->
+        <div id="camera-section">
+          <div class="scan-box" id="scan-box">
+            <video id="scan-video" autoplay playsinline muted></video>
+            <canvas id="scan-canvas" style="display:none;"></canvas>
+            <div class="scan-overlay">
+              <div class="scan-corner tl"></div>
+              <div class="scan-corner tr"></div>
+              <div class="scan-corner bl"></div>
+              <div class="scan-corner br"></div>
+              <div class="scan-line"></div>
+            </div>
+            <div id="scan-placeholder-msg">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".4"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <p>Camera not started</p>
+            </div>
+          </div>
+          <div class="scan-cam-btns">
+            <button id="start-camera" class="btn-primary" style="flex:1;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Start Camera
+            </button>
+            <button id="stop-camera" class="btn-ghost" style="display:none;">⏹ Stop</button>
+            <button id="flip-camera" class="btn-ghost" style="display:none;">🔄 Flip</button>
+          </div>
+          <p id="cam-error" class="scan-error" style="display:none;"></p>
+        </div>
+
+        <!-- Upload view -->
+        <div id="upload-section" style="display:none;">
+          <div class="upload-drop-zone" id="upload-drop-zone">
+            <input type="file" id="scan-upload" accept="image/*" hidden>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            <p>Drop image here or <span class="link-text">click to browse</span></p>
+            <small>PNG, JPG, GIF, WEBP supported</small>
+          </div>
+          <canvas id="upload-canvas" style="display:none;"></canvas>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Result -->
+      <div class="card scan-result-card">
+        <div class="section-label"><span class="num">✓</span> Result</div>
+
+        <div id="scan-idle">
+          <div style="text-align:center; padding:40px 20px; color:var(--text-dim);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3" style="margin-bottom:12px;">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+            </svg>
+            <p style="font-size:13px; color:var(--text-muted);">Point camera at a QR code<br>or upload an image to decode</p>
+          </div>
+        </div>
+
+        <div id="scan-result" style="display:none;">
+          <div class="result-type-badge" id="result-type-badge">URL</div>
+          <div class="result-text-box" id="result-text-box"></div>
+          <div class="result-actions" id="result-actions"></div>
+        </div>
+
+        <div id="scan-error-box" style="display:none;" class="scan-error-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="scan-error-msg">No QR code detected</span>
+        </div>
+
+        <!-- Scan History -->
+        <div class="scan-history-wrap" id="scan-history-wrap" style="display:none;">
+          <div class="section-label" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+            <span class="num">⏱</span> Scan History
+            <button id="clear-scan-history" class="btn-ghost small" style="margin-left:auto;">🗑 Clear</button>
+          </div>
+          <div id="scan-history-list" class="scan-history-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-scanner -->
+
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script src="script.js"></script>
+<script>
+/* ── PWA ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('install-btn').style.display = 'flex';
+});
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-btn').style.display = 'none';
+});
 
+/* ── Tab switching ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    // Stop camera when leaving scanner tab
+    if (btn.dataset.tab !== 'scanner') stopCamera();
+  });
+});
+
+/* ── Logo zone ── */
+document.getElementById('logo-zone').addEventListener('click', () => document.getElementById('logo').click());
+document.getElementById('logo').addEventListener('change', (e) => {
+  const name = e.target.files[0]?.name || '';
+  document.getElementById('logo-label').textContent = name ? '✓ ' + name : 'Click to upload logo';
+});
+
+/* ── Frame color / font size ── */
+document.getElementById('frame-color').addEventListener('input', (e) => {
+  document.getElementById('frame-color-val').textContent = e.target.value;
+});
+document.getElementById('font-size').addEventListener('input', (e) => {
+  document.getElementById('font-size-val').textContent = e.target.value;
+});
+
+/* ── Size presets ── */
+const sizeInput = document.getElementById('size');
+const sizeBtns  = document.querySelectorAll('.size-btn');
+sizeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    sizeBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    sizeInput.value = btn.dataset.px;
+  });
+});
+sizeInput.addEventListener('input', () => {
+  const v = String(parseInt(sizeInput.value) || 0);
+  sizeBtns.forEach(b => b.classList.toggle('active', b.dataset.px === v));
+});
+
+/* ── Custom Dropdowns ── */
+function initCustomDropdowns() {
+  document.querySelectorAll('.cdd').forEach(cdd => {
+    const trigger = cdd.querySelector('.cdd-trigger');
+    const labelEl = cdd.querySelector('.cdd-label');
+    const items   = cdd.querySelectorAll('.cdd-item');
+    const search  = cdd.querySelector('.cdd-search');
+    const realSel = document.getElementById(cdd.dataset.for);
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = cdd.classList.contains('open');
+      closeAll();
+      if (!isOpen) {
+        cdd.classList.add('open');
+        if (search) { search.value = ''; filterItems(cdd, ''); search.focus(); }
+      }
+    });
+    if (search) {
+      search.addEventListener('input', () => filterItems(cdd, search.value));
+      search.addEventListener('click', e => e.stopPropagation());
+    }
+    items.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        items.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        labelEl.textContent = item.textContent;
+        realSel.value = item.dataset.value;
+        realSel.dispatchEvent(new Event('change'));
+        cdd.classList.remove('open');
+      });
+    });
+  });
+  document.addEventListener('click', closeAll);
+}
+function filterItems(cdd, q) {
+  const norm = q.toLowerCase().trim();
+  cdd.querySelectorAll('.cdd-item').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(norm) ? '' : 'none';
+  });
+}
+function closeAll() {
+  document.querySelectorAll('.cdd.open').forEach(c => c.classList.remove('open'));
+}
+initCustomDropdowns();
+
+/* Sync CDD when script.js restores history */
+['type','qr-style','frame-style','label-pos'].forEach(id => {
+  const sel   = document.getElementById(id);
+  const cddEl = document.querySelector(`.cdd[data-for="${id}"]`);
+  if (!sel || !cddEl) return;
+  const origSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+  Object.defineProperty(sel, 'value', {
+    set(v) {
+      origSetter.call(this, v);
+      const matched = cddEl.querySelector(`.cdd-item[data-value="${v}"]`);
+      if (matched) {
+        cddEl.querySelectorAll('.cdd-item').forEach(i => i.classList.remove('active'));
+        matched.classList.add('active');
+        cddEl.querySelector('.cdd-label').textContent = matched.textContent;
+      }
+    },
+    get() { return sel.options[sel.selectedIndex]?.value || ''; }
+  });
+});
+
+/* ════════════════════════════════════════
+   SCANNER ENGINE
+════════════════════════════════════════ */
+let cameraStream   = null;
+let scanInterval   = null;
+let facingMode     = 'environment';
+let scanHistoryArr = JSON.parse(localStorage.getItem('mdqr_scan_history') || '[]');
+
+/* Mode toggle */
+document.getElementById('btn-camera').addEventListener('click', () => {
+  document.getElementById('btn-camera').classList.add('active');
+  document.getElementById('btn-upload').classList.remove('active');
+  document.getElementById('camera-section').style.display = '';
+  document.getElementById('upload-section').style.display = 'none';
+});
+document.getElementById('btn-upload').addEventListener('click', () => {
+  document.getElementById('btn-upload').classList.add('active');
+  document.getElementById('btn-camera').classList.remove('active');
+  document.getElementById('upload-section').style.display = '';
+  document.getElementById('camera-section').style.display = 'none';
+  stopCamera();
+});
+
+/* Start camera */
+document.getElementById('start-camera').addEventListener('click', startCamera);
+async function startCamera() {
+  const errEl = document.getElementById('cam-error');
+  errEl.style.display = 'none';
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    const video = document.getElementById('scan-video');
+    video.srcObject = cameraStream;
+    await video.play();
+    document.getElementById('scan-placeholder-msg').style.display = 'none';
+    document.getElementById('start-camera').style.display = 'none';
+    document.getElementById('stop-camera').style.display = '';
+    document.getElementById('flip-camera').style.display = '';
+    document.getElementById('scan-box').classList.add('scanning');
+    scanInterval = setInterval(scanFrame, 120);
+  } catch(e) {
+    errEl.textContent = e.name === 'NotAllowedError'
+      ? '⚠️ Camera permission denied. Please allow camera access and try again, or use Upload Image instead.'
+      : '⚠️ Camera not available: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+/* Stop camera */
+document.getElementById('stop-camera').addEventListener('click', stopCamera);
+function stopCamera() {
+  if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  const video = document.getElementById('scan-video');
+  video.srcObject = null;
+  document.getElementById('scan-placeholder-msg').style.display = 'flex';
+  document.getElementById('start-camera').style.display = '';
+  document.getElementById('stop-camera').style.display = 'none';
+  document.getElementById('flip-camera').style.display = 'none';
+  document.getElementById('scan-box').classList.remove('scanning');
+}
+
+/* Flip camera */
+document.getElementById('flip-camera').addEventListener('click', async () => {
+  facingMode = facingMode === 'environment' ? 'user' : 'environment';
+  stopCamera();
+  await startCamera();
+});
+
+/* Scan frame from video */
+function scanFrame() {
+  const video  = document.getElementById('scan-video');
+  const canvas = document.getElementById('scan-canvas');
+  if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+  if (code) {
+    handleResult(code.data);
+    stopCamera();
+  }
+}
+
+/* Upload image scan */
+const dropZone = document.getElementById('upload-drop-zone');
+dropZone.addEventListener('click', () => document.getElementById('scan-upload').click());
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) decodeImageFile(file);
+});
+document.getElementById('scan-upload').addEventListener('change', (e) => {
+  if (e.target.files[0]) decodeImageFile(e.target.files[0]);
+});
+
+function decodeImageFile(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.getElementById('upload-canvas');
+      canvas.width  = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'attemptBoth' });
+      if (code) handleResult(code.data);
+      else showScanError('No QR code detected in this image. Try a clearer photo.');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Handle decoded result */
+function handleResult(text) {
+  document.getElementById('scan-idle').style.display = 'none';
+  document.getElementById('scan-error-box').style.display = 'none';
+  document.getElementById('scan-result').style.display = 'block';
+
+  const badge   = document.getElementById('result-type-badge');
+  const textBox = document.getElementById('result-text-box');
+  const actions = document.getElementById('result-actions');
+
+  textBox.textContent = text;
+  actions.innerHTML   = '';
+
+  // Detect type + build smart actions
+  let type = 'Text';
+  let btns = [];
+
+  if (/^https?:\/\//i.test(text)) {
+    type = 'URL';
+    btns.push({ label: '🌐 Open Link', action: () => window.open(text, '_blank') });
+  } else if (text.startsWith('upi://')) {
+    type = 'UPI Payment';
+    btns.push({ label: '💳 Pay Now', action: () => window.open(text) });
+  } else if (text.startsWith('tel:')) {
+    type = 'Phone';
+    btns.push({ label: '📞 Call', action: () => window.open(text) });
+  } else if (text.startsWith('mailto:')) {
+    type = 'Email';
+    btns.push({ label: '📧 Send Email', action: () => window.open(text) });
+  } else if (text.startsWith('BEGIN:VCARD')) {
+    type = 'vCard Contact';
+    btns.push({ label: '👤 Save Contact', action: () => {
+      const blob = new Blob([text], { type: 'text/vcard' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'contact.vcf'; a.click();
+    }});
+  } else if (text.startsWith('WIFI:')) {
+    type = 'Wi-Fi';
+    const ssid = (text.match(/S:([^;]+)/) || [])[1] || '';
+    const pass = (text.match(/P:([^;]+)/) || [])[1] || '';
+    textBox.innerHTML = `<strong>Network:</strong> ${ssid}<br><strong>Password:</strong> ${pass || '(none)'}`;
+  } else if (text.startsWith('smsto:') || text.startsWith('sms:')) {
+    type = 'SMS';
+    btns.push({ label: '💬 Send SMS', action: () => window.open(text) });
+  } else if (text.includes('|')) {
+    type = 'Voting / Custom';
+  }
+
+  badge.textContent = type;
+  badge.className   = 'result-type-badge type-' + type.toLowerCase().replace(/[^a-z]/g, '');
+
+  // Always: Copy + Send to Generator
+  btns.push({ label: '📋 Copy', action: () => {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = actions.querySelector('[data-copy]');
+      if (btn) { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Copy', 1500); }
+    });
+  }, copy: true });
+
+  btns.push({ label: '⚡ Send to Generator', action: () => {
+    // Switch to generator tab
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector('.tab-btn[data-tab="generator"]').classList.add('active');
+    document.getElementById('tab-generator').classList.add('active');
+    // Prefill URL field
+    const typeEl = document.getElementById('type');
+    typeEl.value = 'url';
+    typeEl.dispatchEvent(new Event('change'));
+    setTimeout(() => {
+      const urlField = document.getElementById('url');
+      if (urlField) urlField.value = text;
+    }, 100);
+  }});
+
+  btns.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn' + (b.copy ? '' : '');
+    btn.textContent = b.label;
+    if (b.copy) btn.setAttribute('data-copy', '1');
+    btn.addEventListener('click', b.action);
+    actions.appendChild(btn);
+  });
+
+  // Save to scan history
+  addScanHistory(text, type);
+}
+
+function showScanError(msg) {
+  document.getElementById('scan-idle').style.display = 'none';
+  document.getElementById('scan-result').style.display = 'none';
+  document.getElementById('scan-error-box').style.display = 'flex';
+  document.getElementById('scan-error-msg').textContent = msg;
+}
+
+/* Scan History */
+function addScanHistory(text, type) {
+  scanHistoryArr.unshift({ text, type, ts: Date.now() });
+  if (scanHistoryArr.length > 20) scanHistoryArr = scanHistoryArr.slice(0, 20);
+  localStorage.setItem('mdqr_scan_history', JSON.stringify(scanHistoryArr));
+  renderScanHistory();
+}
+
+function renderScanHistory() {
+  const wrap = document.getElementById('scan-history-wrap');
+  const list = document.getElementById('scan-history-list');
+  if (!scanHistoryArr.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = '';
+  scanHistoryArr.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'scan-history-item';
+    const d = new Date(item.ts);
+    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    div.innerHTML = `
+      <div class="shi-left">
+        <span class="shi-type">${item.type}</span>
+        <span class="shi-text">${item.text.length > 50 ? item.text.slice(0,50)+'…' : item.text}</span>
+      </div>
+      <div class="shi-right">
+        <span class="shi-time">${time}</span>
+        <button class="shi-del" data-i="${i}">✕</button>
+      </div>`;
+    div.querySelector('.shi-del').addEventListener('click', () => {
+      scanHistoryArr.splice(i, 1);
+      localStorage.setItem('mdqr_scan_history', JSON.stringify(scanHistoryArr));
+      renderScanHistory();
+    });
+    div.addEventListener('click', (e) => {
+      if (e.target.classList.contains('shi-del')) return;
+      handleResult(item.text);
+    });
+    list.appendChild(div);
+  });
+}
+
+document.getElementById('clear-scan-history').addEventListener('click', () => {
+  if (!confirm('Clear scan history?')) return;
+  scanHistoryArr = [];
+  localStorage.removeItem('mdqr_scan_history');
+  renderScanHistory();
+});
+
+renderScanHistory();
+</script>
 </body>
 </html>
