@@ -351,13 +351,38 @@ async function generateQR(options = { saveHistory: true }) {
   const style       = getQRStyle(qrStyleEl.value);
 
   const makeOptions = (sz) => ({
-    width: sz, height: sz, data,
-    image: logoImage ? logoImage.src : undefined,
-    dotsOptions:          { type: style.type || "square", color: style.color || "#000", gradient: style.gradient || undefined },
-    backgroundOptions:    { color: "#fff" },
-    cornersSquareOptions: { color: style.eyeColor || style.color || "#000" },
-    imageOptions:         { crossOrigin:"anonymous", margin:6, imageSize:0.5 }
-  });
+  width: sz,
+  height: sz,
+  data,
+
+  image: logoImage ? logoImage.src : undefined,
+
+  margin: 30,
+
+  qrOptions: {
+    errorCorrectionLevel: "H"
+  },
+
+  dotsOptions: {
+    type: style.type || "square",
+    color: style.color || "#000",
+    gradient: style.gradient || undefined
+  },
+
+  backgroundOptions: {
+    color: "#fff"
+  },
+
+  cornersSquareOptions: {
+    color: style.eyeColor || style.color || "#000"
+  },
+
+  imageOptions: {
+    crossOrigin:"anonymous",
+    margin:6,
+    imageSize:0.5
+  }
+});
 
   canvasContainer.innerHTML = "";
   framedCanvas.style.display = "none";
