@@ -1,4 +1,4 @@
-const CACHE = "mdqr-v4";
+const CACHE = "mdqr-v5";
 const BASE = "/QR-code-generator";
 
 const ASSETS = [
