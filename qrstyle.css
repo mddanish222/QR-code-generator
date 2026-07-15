@@ -371,6 +371,58 @@ textarea.styled-input { min-height: 80px; resize: vertical; }
 }
 .file-zone:hover { border-color: rgba(0,245,196,0.3); color: var(--accent); background: rgba(0,245,196,0.04); }
 
+/* ── Popular Logos Grid & Preset Buttons ── */
+.popular-logos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.logo-preset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s ease-in-out;
+  padding: 0;
+  flex-shrink: 0;
+}
+.logo-preset-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+.logo-preset-btn span {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.logo-preset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  transform: scale(1.08);
+}
+.logo-preset-btn:hover svg {
+  transform: scale(1.1);
+}
+.logo-preset-btn.active {
+  background: rgba(0, 245, 196, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 10px rgba(0, 245, 196, 0.2);
+}
+.logo-preset-btn.active span {
+  color: var(--accent);
+}
+
 /* ── Color Picker ── */
 .color-row { display: flex; align-items: center; gap: 10px; }
 .color-picker {
