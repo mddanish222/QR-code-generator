@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="MD-QR" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="icon" href="icon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="qrstyle.css">
 </head>
 <body>
@@ -206,6 +206,96 @@
             <input type="file" id="logo" accept="image/*" hidden>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             <span id="logo-label">Click to upload logo</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Or Choose a Popular Logo</label>
+          <div class="popular-logos-grid" id="popular-logos">
+            <button type="button" class="logo-preset-btn active" data-preset="none" title="No Logo">
+              <span>None</span>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="location" title="Location/Maps">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#EA4335"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="whatsapp" title="WhatsApp">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#25D366"/><path d="M12 3.5c-4.7 0-8.5 3.8-8.5 8.5 0 1.5.4 3 1.1 4.3L3.5 20.5l4.3-1.1c1.2.7 2.6 1.1 4.2 1.1 4.7 0 8.5-3.8 8.5-8.5S16.7 3.5 12 3.5zm4.9 12.1c-.2.6-1 1.1-1.6 1.2-.5.1-1.1.2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2 0-.2-1.3-1.7-1.3-3.2 0-1.5.8-2.3 1.1-2.6.3-.3.6-.4.9-.4h.6c.2 0 .4 0 .6.5.2.6.8 2 .9 2.2.1.2.1.4-.1.7l-.5.6c-.2.2-.3.4-.1.7.2.4.9 1.5 2 2.4.9.8 1.6 1.1 1.9 1.2.3.1.4.1.6-.1.2-.2.8-.9.9-1.2.1-.3.3-.2.5-.1.2.1 1.5.7 1.8.8.3.1.5.2.6.3.1.3 0 1-.2 1.5z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="phone" title="Phone Contact">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#007AFF"/><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="email" title="Email">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FF9500"/><path d="M17.5 8h-11c-.8 0-1.5.7-1.5 1.5v5c0 .8.7 1.5 1.5 1.5h11c.8 0 1.5-.7 1.5-1.5v-5c0-.8-.7-1.5-1.5-1.5zm-.5 1.5l-5 3-5-3v-1l5 3 5-3v1z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="wifi" title="Wi-Fi">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#5856D6"/><path d="M12 17.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm-4.2-4.2c2.3-2.3 6.1-2.3 8.4 0l-1.1 1.1c-1.7-1.7-4.5-1.7-6.2 0l-1.1-1.1zm-2.2-2.2c3.5-3.5 9.3-3.5 12.8 0l-1.1 1.1c-2.9-2.9-7.7-2.9-10.6 0l-1.1-1.1z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="facebook" title="Facebook">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path d="M14.5 12h-2v7h-3v-7h-1.5v-2.5h1.5v-1.8c0-2 1.2-3.2 3-3.2.9 0 1.6.1 1.8.1v2.1h-1.3c-1 0-1.2.5-1.2 1.2v1.6h2.5l-.3 2.5z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="instagram" title="Instagram">
+              <svg viewBox="0 0 24 24">
+                <radialGradient id="igGrad1" cx="30%" cy="107%" r="150%">
+                  <stop offset="0%" stop-color="#fdf497"/>
+                  <stop offset="45%" stop-color="#fd5949"/>
+                  <stop offset="60%" stop-color="#d6249f"/>
+                  <stop offset="90%" stop-color="#285AEB"/>
+                </radialGradient>
+                <circle cx="12" cy="12" r="12" fill="url(#igGrad1)"/>
+                <rect x="6" y="6" width="12" height="12" rx="3.5" fill="none" stroke="#FFF" stroke-width="1.2"/>
+                <circle cx="12" cy="12" r="2.5" fill="none" stroke="#FFF" stroke-width="1.2"/>
+                <circle cx="15.2" cy="8.8" r="0.6" fill="#FFF"/>
+              </svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="twitter" title="Twitter / X">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#000000"/><path d="M15.5 6.5h1.8l-4 4.5 4.7 6.2h-3.6l-2.8-3.7-3.2 3.7H6.6l4.2-4.8L6.3 6.5h3.7l2.5 3.3 3-3.3zm-.6 9.5h1l-8-9H6.8l8.1 9z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="youtube" title="YouTube">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#FF0000"/><path d="M17 9.5c0-.8-.7-1.5-1.5-1.5h-7C7.7 8 7 8.7 7 9.5v5c0 .8.7 1.5 1.5 1.5h7c.8 0 1.5-.7 1.5-1.5v-5z" fill="#FFF"/><polygon points="10.5,10 14.5,12 10.5,14" fill="#FF0000"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="linkedin" title="LinkedIn">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#0A66C2"/><path d="M9.5 9h2.2v1.1h.1c.3-.6 1.1-1.3 2.3-1.3 2.4 0 2.9 1.6 2.9 3.7V16.5h-2.3v-3.6c0-.9-.1-2-1.2-2-1.1 0-1.3.9-1.3 1.9v3.7H9.5V9zM6 9h2.3v7.5H6V9zM7.2 7.8c-.8 0-1.4-.6-1.4-1.4 0-.8.6-1.4 1.4-1.4.8 0 1.4.6 1.4 1.4 0 .8-.6 1.4-1.4 1.4z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="telegram" title="Telegram">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#26A5E4"/><path d="M6.3 11.7l10.8-4.2c.5-.2 1 .1.8.7l-1.9 8.7c-.1.6-.5.7-1 .4l-2.9-2.1-1.4 1.4c-.2.2-.3.3-.6.3l.2-2.9 5.2-4.7c.2-.2-.1-.3-.4-.1l-6.4 4-2.8-.9c-.6-.2-.6-.6.1-.9z" fill="#FFF"/></svg>
+            </button>
+            <button type="button" class="logo-preset-btn" data-preset="website" title="Website / Link">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#8E8E93"/><path d="M12 5.5c-3.6 0-6.5 2.9-6.5 6.5s2.9 6.5 6.5 6.5 6.5-2.9 6.5-6.5-2.9-6.5-6.5-6.5zm-5 6.5c0-.6.1-1.2.3-1.7L10 13v1c0 1.1.9 2 2 2v1.9c-2.9-.5-5.1-2.9-5-5.9zm9.9 2.5c-.2-.8-1-1.4-1.9-1.4h-1v-3c0-.6-.4-1-1-1H9V9h2c.6 0 1-.4 1-1V7h2c1.1 0 2-.9 2-2v-.4c2.2.9 3.8 3.1 3.8 5.6 0 1.6-.6 3-1.6 4.1z" fill="#FFF"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="logo-settings-group" style="display: none; margin-top: 12px; flex-direction: column; gap: 12px;">
+          <div class="field-group">
+            <label>Logo Background Shape</label>
+            <select id="logo-shape" style="display:none;">
+              <option value="silhouette">silhouette</option>
+              <option value="circle">circle</option>
+              <option value="square">square</option>
+              <option value="none">none</option>
+            </select>
+            <div class="cdd" id="cdd-logo-shape" data-for="logo-shape">
+              <div class="cdd-trigger">
+                <span class="cdd-label">✨ Silhouette Outline (Exact Shape)</span>
+                <svg class="cdd-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="cdd-menu">
+                <div class="cdd-list">
+                  <div class="cdd-item active" data-value="silhouette">✨ Silhouette Outline (Exact Shape)</div>
+                  <div class="cdd-item" data-value="circle">⚪ Circular Badge</div>
+                  <div class="cdd-item" data-value="square">⬜ Square Badge</div>
+                  <div class="cdd-item" data-value="none">❌ No Background (Cutout)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field-group">
+              <label>Logo Size — <span id="logo-size-val">30</span>%</label>
+              <input id="logo-size-input" type="range" min="15" max="45" value="30" class="range-slider">
+            </div>
+            <div class="field-group">
+              <label>Clearance / Padding — <span id="logo-margin-val">4</span>%</label>
+              <input id="logo-margin-input" type="range" min="0" max="25" value="4" class="range-slider">
+            </div>
           </div>
         </div>
       </div>
@@ -512,6 +602,37 @@ document.getElementById('font-size').addEventListener('input', (e) => {
   document.getElementById('font-size-val').textContent = e.target.value;
 });
 
+/* ── Logo size / margin ── */
+document.getElementById('logo-size-input').addEventListener('input', (e) => {
+  document.getElementById('logo-size-val').textContent = e.target.value;
+});
+document.getElementById('logo-margin-input').addEventListener('input', (e) => {
+  document.getElementById('logo-margin-val').textContent = e.target.value;
+});
+
+/* ── Auto-sync label position based on text input ── */
+const topLabelInput = document.getElementById('label-top');
+const bottomLabelInput = document.getElementById('label-bottom');
+const labelPosSel = document.getElementById('label-pos');
+
+function autoSyncLabelPos() {
+  const topVal = topLabelInput.value.trim();
+  const botVal = bottomLabelInput.value.trim();
+
+  if (topVal && botVal) {
+    labelPosSel.value = 'both';
+  } else if (topVal) {
+    labelPosSel.value = 'top';
+  } else if (botVal) {
+    labelPosSel.value = 'bottom';
+  }
+
+  labelPosSel.dispatchEvent(new Event('change'));
+}
+
+topLabelInput.addEventListener('input', autoSyncLabelPos);
+bottomLabelInput.addEventListener('input', autoSyncLabelPos);
+
 /* ── Size presets ── */
 const sizeInput = document.getElementById('size');
 const sizeBtns  = document.querySelectorAll('.size-btn');
@@ -575,7 +696,7 @@ function closeAll() {
 initCustomDropdowns();
 
 /* Sync CDD when script.js restores history */
-['type','qr-style','frame-style','label-pos'].forEach(id => {
+['type','qr-style','frame-style','label-pos','logo-shape'].forEach(id => {
   const sel   = document.getElementById(id);
   const cddEl = document.querySelector(`.cdd[data-for="${id}"]`);
   if (!sel || !cddEl) return;
